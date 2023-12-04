@@ -2,8 +2,7 @@ vim.opt.cursorline = true
 vim.opt.number = true
 vim.opt.ts = 4
 vim.opt.sw = 4
-vim.opt.relativenumber = true
-vim.opt.ignorecase = true
+vim.opt.relativenumber = true vim.opt.ignorecase = true
 vim.opt.smartcase = true
 vim.opt.hlsearch = false
 vim.opt.clipboard = 'unnamedplus'
@@ -21,7 +20,7 @@ if not vim.loop.fs_stat(lazypath) then
     "clone",
     "--filter=blob:none",
     "https://github.com/folke/lazy.nvim.git",
-    "--branch=stable", -- latest stable release
+    "--branch=stable",
     lazypath,
   })
 end
@@ -39,13 +38,63 @@ require("lazy").setup({
 		},
 		build = ':TSUpdate',
 	},
-	{ 
-		"bluz71/vim-moonfly-colors", 
-		name = "moonfly", 
-		lazy = false, 
-		priority = 1000 
+	{
+		"bluz71/vim-moonfly-colors",
+		name = "moonfly",
+		lazy = false,
+		priority = 1000
+	},
+	{'williamboman/mason.nvim'},
+	{'williamboman/mason-lspconfig.nvim'},
+	{
+		'VonHeikemen/lsp-zero.nvim',
+		branch = 'v3.x'
+	},
+	{'neovim/nvim-lspconfig'},
+	{'hrsh7th/cmp-nvim-lsp'},
+	{'hrsh7th/nvim-cmp'},
+	{'L3MON4D3/LuaSnip'},
+})
+
+local lsp_zero = require('lsp-zero')
+
+lsp_zero.on_attach(function(client, bufnr)
+	lsp_zero.default_keymaps({buffer = bufnr})
+end)
+
+require('mason').setup({})
+require('mason-lspconfig').setup({
+	ensure_installed = {},
+	handlers = {
+		lsp_zero.default_setup,
 	},
 })
+
+local cmp = require('cmp')
+
+cmp.setup({
+	mapping = cmp.mapping.preset.insert({
+		['<CR>'] = cmp.mapping.confirm({select = true}),
+	})
+})
+
+local cmp = require('cmp')
+
+cmp.setup({
+	preselect = 'item',
+	completion = {
+		completeopt = 'menu,menuone,noinsert'
+	},
+})
+
+local lsp_zero = require('lsp-zero')
+
+lsp_zero.on_attach(function(client, bufnr)
+	lsp_zero.default_keymaps({buffer = bufnr})
+end)
+
+local lua_opts = lsp_zero.nvim_lua_ls()
+require('lspconfig').lua_ls.setup(lua_opts)
 
 vim.cmd [[colorscheme moonfly]]
 
@@ -69,7 +118,7 @@ vim.defer_fn(function()
 		textobjects = {
 			select = {
 				enable = true,
-				lookahead = true, 
+				lookahead = true,
 				keymaps = {
 					['aa'] = '@parameter.outer',
 					['ia'] = '@parameter.inner',
