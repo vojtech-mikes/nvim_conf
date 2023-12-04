@@ -27,6 +27,7 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
+	{'nvim-lualine/lualine.nvim'},
 	{
 		'nvim-telescope/telescope.nvim', tag = '0.1.5',
 		dependencies = { 'nvim-lua/plenary.nvim' }
@@ -54,6 +55,20 @@ require("lazy").setup({
 	{'hrsh7th/cmp-nvim-lsp'},
 	{'hrsh7th/nvim-cmp'},
 	{'L3MON4D3/LuaSnip'},
+})
+
+require('lualine').setup({
+	options = {
+		icons_enabled = false
+	},
+	sections = {
+		lualine_a = {'mode'},
+		lualine_b = {'branch'},
+		lualine_c = {'filename'},
+		lualine_x = {'encoding'},
+		lualine_y = {'progress'},
+		lualine_z = {'location'}
+	}
 })
 
 local lsp_zero = require('lsp-zero')
