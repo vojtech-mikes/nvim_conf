@@ -1,8 +1,10 @@
+-- Basic settings
 vim.opt.cursorline = true
 vim.opt.number = true
 vim.opt.ts = 4
 vim.opt.sw = 4
-vim.opt.relativenumber = true vim.opt.ignorecase = true
+vim.opt.relativenumber = true
+vim.opt.ignorecase = true
 vim.opt.smartcase = true
 vim.opt.hlsearch = false
 vim.opt.clipboard = 'unnamedplus'
@@ -11,8 +13,11 @@ vim.opt.timeoutlen = 300
 vim.opt.mouse = 'a'
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
+
+-- Set leader key to the spacebar
 vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
 
+-- Init lazy nvim package manager
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
   vim.fn.system({
@@ -26,6 +31,7 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
+-- Define all packages here
 require("lazy").setup({
 	{'nvim-lualine/lualine.nvim'},
 	{
@@ -57,6 +63,7 @@ require("lazy").setup({
 	{'L3MON4D3/LuaSnip'},
 })
 
+-- Lua line setup that displays just actually thing you need.
 require('lualine').setup({
 	options = {
 		icons_enabled = false
@@ -71,12 +78,14 @@ require('lualine').setup({
 	}
 })
 
+-- Init LSP-zero
 local lsp_zero = require('lsp-zero')
 
 lsp_zero.on_attach(function(client, bufnr)
 	lsp_zero.default_keymaps({buffer = bufnr})
 end)
 
+-- Setup Mason so I can handle LSPs inside neovim and setup LSP-zero as handler
 require('mason').setup({})
 require('mason-lspconfig').setup({
 	ensure_installed = {},
@@ -90,29 +99,21 @@ local cmp = require('cmp')
 cmp.setup({
 	mapping = cmp.mapping.preset.insert({
 		['<CR>'] = cmp.mapping.confirm({select = true}),
-	})
-})
-
-local cmp = require('cmp')
-
-cmp.setup({
+	}),
 	preselect = 'item',
 	completion = {
 		completeopt = 'menu,menuone,noinsert'
 	},
 })
 
-local lsp_zero = require('lsp-zero')
-
-lsp_zero.on_attach(function(client, bufnr)
-	lsp_zero.default_keymaps({buffer = bufnr})
-end)
-
+-- Opts for lua_ls so it wont complain in init.lua file
 local lua_opts = lsp_zero.nvim_lua_ls()
 require('lspconfig').lua_ls.setup(lua_opts)
 
+-- Init colorscheme
 vim.cmd [[colorscheme moonfly]]
 
+-- Init treesitter
 vim.defer_fn(function()
 	require('nvim-treesitter.configs').setup {
 		ensure_installed = { 'lua','javascript', 'typescript', 'vimdoc', 'vim', 'bash', 'ocaml'},
@@ -176,6 +177,7 @@ vim.defer_fn(function()
 	}
 end, 0)
 
+-- Telescope keymaps
 local builtin = require('telescope.builtin')
 vim.keymap.set('n', '<leader>ff', builtin.find_files, {})
 vim.keymap.set('n', '<leader>fg', builtin.live_grep, {})
