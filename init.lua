@@ -29,20 +29,30 @@ vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
 	{
+		'nvim-telescope/telescope.nvim', tag = '0.1.5',
+		dependencies = { 'nvim-lua/plenary.nvim' }
+	},
+	{
 		'nvim-treesitter/nvim-treesitter',
 		dependencies = {
 			'nvim-treesitter/nvim-treesitter-textobjects',
 		},
 		build = ':TSUpdate',
 	},
+	{ 
+		"bluz71/vim-moonfly-colors", 
+		name = "moonfly", 
+		lazy = false, 
+		priority = 1000 
+	},
 })
+
+vim.cmd [[colorscheme moonfly]]
 
 vim.defer_fn(function()
 	require('nvim-treesitter.configs').setup {
-		-- Add languages to be installed here that you want installed for treesitter
 		ensure_installed = { 'lua','javascript', 'typescript', 'vimdoc', 'vim', 'bash', 'ocaml'},
 
-		-- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
 		auto_install = true,
 
 		highlight = { enable = true },
@@ -59,9 +69,8 @@ vim.defer_fn(function()
 		textobjects = {
 			select = {
 				enable = true,
-				lookahead = true, -- Automatically jump forward to textobj, similar to targets.vim
+				lookahead = true, 
 				keymaps = {
-					-- You can use the capture groups defined in textobjects.scm
 					['aa'] = '@parameter.outer',
 					['ia'] = '@parameter.inner',
 					['af'] = '@function.outer',
@@ -72,7 +81,7 @@ vim.defer_fn(function()
 			},
 			move = {
 				enable = true,
-				set_jumps = true, -- whether to set jumps in the jumplist
+				set_jumps = true,
 				goto_next_start = {
 					[']m'] = '@function.outer',
 					[']]'] = '@class.outer',
@@ -102,3 +111,9 @@ vim.defer_fn(function()
 		},
 	}
 end, 0)
+
+local builtin = require('telescope.builtin')
+vim.keymap.set('n', '<leader>ff', builtin.find_files, {})
+vim.keymap.set('n', '<leader>fg', builtin.live_grep, {})
+vim.keymap.set('n', '<leader>fb', builtin.buffers, {})
+vim.keymap.set('n', '<leader>fh', builtin.help_tags, {})
