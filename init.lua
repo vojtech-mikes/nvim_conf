@@ -12,9 +12,9 @@ vim.opt.updatetime = 250
 vim.opt.timeoutlen = 300
 vim.opt.mouse = 'a'
 vim.g.mapleader = " "
-vim.g.maplocalleader = " "
 
 -- Set leader key to the spacebar
+vim.g.maplocalleader = " "
 vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
 
 -- Init lazy nvim package manager
@@ -181,3 +181,7 @@ end, 0)
 local builtin = require('telescope.builtin')
 vim.keymap.set('n', '<leader>ff', builtin.find_files, {})
 vim.keymap.set('n', '<leader>fg', builtin.live_grep, {})
+
+-- Added keymaps for diagnostics from kickstart.nvim
+vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Open floating diagnostic message' })
+vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostics list' })
